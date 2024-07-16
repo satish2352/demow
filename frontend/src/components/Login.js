@@ -29,7 +29,7 @@ const Login = () => {
                 setMessage('Login Success! Redirecting to flow in 5 seconds');
                 setMessageColor('bg-green-500');
                 setTimeout(() => {
-                    navigate('/flow');
+                    navigate('/');
                 }, 5000);
             } else {
                 setMessage(data.message);

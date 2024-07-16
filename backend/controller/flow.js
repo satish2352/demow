@@ -14,11 +14,11 @@ async function handleGetFlowByUserId(req, res){
 async function handleUpdateFlow(req, res){
     try{
         const {nodes, edges, data, userId} = req.body
-        const flow = Flow.findOneAndUpdate({userId}, {nodes, edges, data}, {upsert:true, returnOriginal:false})
-        return apiResponse.successResponseWithData(res, 'Flow Created', { id:flow._id });
+        await Flow.findOneAndUpdate({userId}, {nodes, edges, data}, {upsert:true})
+        return apiResponse.successResponseWithData(res, 'Flow Updated');
     }catch(e){
         console.log(e)
-        return apiResponse.ErrorResponse(res, 'Error in creating. Try again later')
+        return apiResponse.ErrorResponse(res, 'Error in Updating. Try again later')
     }
 }
 

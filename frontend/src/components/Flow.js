@@ -13,35 +13,18 @@ import 'reactflow/dist/style.css';
 
 import { CircleNode, RectangleNode, TriangleNode } from './CustomNodes';
 import FlowSideBar from './FlowSideBar';
+import { decodeToken } from 'react-jwt';
 
 // import './index.css';
 
-const initialNodes = [
-  {
-    id: '1',
-    type: 'circle',
-    data: { label: 'Hello' },
-    position: { x: 250, y: 5 },
-  },
-  {
-    id: '2',
-    type: 'rectangle',
-    data: { label: 'Heyy. Welcome back!' },
-    position: { x: 600, y: 5 },
-  },
-];
-
-const initialEdges = [
-  { id: 'e1-2', source: '1', target: '2' }
-];
 
 let id = 0;
 const getId = () => `dndnode_${id++}`;
 
 const Flow = () => {
   const reactFlowWrapper = useRef(null);
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const [nodes, setNodes, onNodesChange] = useNodesState([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const { screenToFlowPosition } = useReactFlow();
   const nodeTypes = useMemo(() => ({ circle: CircleNode, triangle: TriangleNode, rectangle: RectangleNode }), []);
 
@@ -87,18 +70,22 @@ const Flow = () => {
 
   async function getFlow() {
     try {
-      const userId = localStorage.getItem('jwt_token')
+      const token = localStorage.getItem('jwt_token')
+      const decoded = decodeToken(token)
+      const userId = decoded._id
       const res = await fetch(`http://localhost:3002/flow/${userId}`, { method: 'GET' })
       const msg = await res.json()
-      if(msg.result){
-        const flow = msg.responseData.flow
-        console.log(msg.responseData.flow)
-        setEdges(eds=>eds=flow.edges)
-        setNodes(nds=>nds=flow.nodes)
-      }else{
+      console.log(msg)
+      if (msg.result) {
+        if (msg.responseData.flow) {
+          const flow = msg.responseData.flow
+          setEdges(eds => eds = flow.edges)
+          setNodes(nds => nds = flow.nodes)
+        }
+      } else {
         console.log(msg.message)
       }
-    }catch(e){
+    } catch (e) {
       console.log("Error while fetching Flow")
     }
   }

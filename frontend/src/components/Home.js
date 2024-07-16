@@ -1,16 +1,16 @@
 import React, { useState } from "react";
 import QRCode from "react-qr-code";
-// import { decodeToken } from "react-jwt";
+import { decodeToken } from "react-jwt";
 
 const Home = () => {
   const [isConnected, setIsConnected] = useState(false)
   const [qrCode, setQrCode] = useState(null)
   const [message, setMessage] = useState(null)
+  const [mobile, setMobile] = useState('')
   function connect() {
-    // const token = localStorage.getItem('jwt_token')
-    // const decoded = decodeToken(token)
-    // const id = decoded._id
-    const id = localStorage.getItem('jwt_token')
+    const token = localStorage.getItem('jwt_token')
+    const decoded = decodeToken(token)
+    const id = decoded._id
     if (!isConnected) {
       const ws = new WebSocket(`ws://localhost:3003`)
       ws.onopen = function () {
@@ -31,13 +31,14 @@ const Home = () => {
         }
       }
     }
-    const res = fetch(`http://localhost:3002/whatsapp/${id}/start`)
+    const res = fetch(`http://localhost:3002/whatsapp/${id}/start/${mobile}`)
   }
 
   return (
     <>
       {message && <p>{message}</p>}
       {qrCode && <QRCode value={qrCode} />}
+      <input type="tel" className="border-black border-2" placeholder="Number to Activate chatbot" value={mobile} onChange={e=>setMobile(e.target.value)}/>
       <button onClick={connect}>connect</button>
     </>
   );

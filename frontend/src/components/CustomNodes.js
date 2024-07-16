@@ -64,12 +64,6 @@ export const TriangleNode = ({ data }) => {
             />
             <input id={data.id} type='text' className='triangle-node-text' value={text} onChange={(e)=>{data.label=e.target.value;setText(data.label)}}/>
 
-            {/* <Handle
-                type="source"
-                position="bottom"
-                id={`${data.id}.bottom`}
-                style={{ left: "50%", borderRadius: 0 }}
-            /> */}
         </div>
     );
 };

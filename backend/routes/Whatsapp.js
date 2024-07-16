@@ -22,11 +22,11 @@ router.post('/message', async (req, res) => {
     }
 });
 
-router.get('/:id/start', async (req, res) => {
-    const id = req.params.id;
+router.get('/:id/start/:mobile', async (req, res) => {
+    const {id, mobile} = req.params;
     // const ws  = connections[id]
     try {
-        await startClient(id, ws);
+        await startClient(id, ws, mobile);
         res.send('Client started');
     } catch (error) {
         console.error(error);

@@ -1,4 +1,5 @@
 import React from 'react';
+import { decodeToken } from 'react-jwt';
 
 export default function FlowSideBar({ nodes, edges }) {
 
@@ -45,18 +46,21 @@ export default function FlowSideBar({ nodes, edges }) {
             data.push(dict)
         })
         try {
+            const token = localStorage.getItem('jwt_token')
+            const decoded = decodeToken(token)
+            const userId= decoded._id
             const res = await fetch('http://localhost:3002/flow/update', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ userId: localStorage.getItem('jwt_token'), data,nodes, edges})
+                body: JSON.stringify({ userId, data, nodes, edges })
             })
 
             const msg = await res.json()
-            if(msg.result){
+            if (msg.result) {
                 console.log("Updated")
-            }else{
+            } else {
                 console.log(msg.message)
             }
         } catch (e) {
